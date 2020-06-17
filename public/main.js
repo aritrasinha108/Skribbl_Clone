@@ -1,9 +1,61 @@
+
+
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-ctx.fillStyle = "#ffffff7d";
+ctx.fillStyle = "#0000007d";
+ctx.strokeStyle = "white";
+
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 var drawing = false;
+var socket = io();
+ctx.lineWidth = 5;
+var current = {
+    color: 'dark-black'
+};
 
-ctx.addEventListener("mouseMove", onMouseDrag, false);
-ctx.addEventListener("mouseUp", onMouseUp, false);
-ctx.addEventListener("mouseDown", onMouseDown, false);
+
+canvas.addEventListener("mousemove", onMouseDrag, false);
+canvas.addEventListener("mouseup", onMouseUp, false);
+canvas.addEventListener("mousedown", onMouseDown, false);
+canvas.addEventListener("mouseout", onMouseUp, false);
+socket.on('drawing', otherDraws);
+function draw(a, b, c, d, emit) {
+    ctx.beginPath();
+    ctx.moveTo(a, b);
+    ctx.lineTo(c, d);
+    ctx.strokeStyle = current.color;
+    ctx.stroke();
+
+    if (!emit)
+        return;
+    socket.emit('drawing', {
+        a: a, //Initial x
+        b: b, //Initial y
+        c: c, //Final x
+        d: d  //Final y
+    });
+}
+function onMouseUp() {
+    if (drawing)
+        drawing = false;
+    return;
+}
+function onMouseDown(e) {
+    drawing = true;
+    current.x = e.clientX;
+    current.y = e.clientY;
+
+}
+function onMouseDrag(e) {
+    if (!drawing) return;
+    else {
+        draw(current.x, current.y, e.clientX, e.clientY, true);
+        current.x = e.clientX;
+        current.y = e.clientY;
+    }
+
+
+}
+function otherDraws(data) {
+    draw(data.a, data.b, data.c, data.d, false);
+}
