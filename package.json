@@ -1,0 +1,19 @@
+{
+  "name": "skribblclone",
+  "version": "1.0.0",
+  "description": "A game that is identical to skribbl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://www.github.com/aritrasinha108/"
+  },
+  "author": "Aritra Sinha",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
