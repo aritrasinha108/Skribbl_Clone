@@ -2,12 +2,14 @@
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+
 ctx.fillStyle = "#0000007d";
 ctx.strokeStyle = "white";
 
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 var drawing = false;
 var socket = io();
+
 ctx.lineWidth = 5;
 var current = {
     color: 'dark-black'
@@ -19,11 +21,18 @@ canvas.addEventListener("mouseup", onMouseUp, false);
 canvas.addEventListener("mousedown", onMouseDown, false);
 canvas.addEventListener("mouseout", onMouseUp, false);
 socket.on('drawing', otherDraws);
-function draw(a, b, c, d, emit) {
+
+
+function colorUpdate(color) {
+    current.color = color
+    console.log(`Changing color to ${color}`);
+}
+
+function draw(a, b, c, d, color = current.color, emit) {
     ctx.beginPath();
     ctx.moveTo(a, b);
     ctx.lineTo(c, d);
-    ctx.strokeStyle = current.color;
+    ctx.strokeStyle = color;
     ctx.stroke();
 
     if (!emit)
@@ -32,7 +41,8 @@ function draw(a, b, c, d, emit) {
         a: a, //Initial x
         b: b, //Initial y
         c: c, //Final x
-        d: d  //Final y
+        d: d,  //Final y
+        color: current.color
     });
 }
 function onMouseUp() {
@@ -57,5 +67,6 @@ function onMouseDrag(e) {
 
 }
 function otherDraws(data) {
-    draw(data.a, data.b, data.c, data.d, false);
+    draw(data.a, data.b, data.c, data.d, data.color, false);
 }
+

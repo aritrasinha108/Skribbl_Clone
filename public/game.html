@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <section id="main">
+        <div class="colors">
+            <button id="color1" onclick="colorUpdate('red')">Red</button>
+            <button id="color2" onclick="colorUpdate('white')">White</button>
+            <button id="color3" onclick="colorUpdate('green')">Green</button>
+            <button id="color4" onclick="colorUpdate('black')">Black</button>
+        </div>
+        <canvas id=myCanvas height="600px" width="900px"></canvas>
+    </section>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

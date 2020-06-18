@@ -4,18 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas</title>
     <link rel="stylesheet" href="style.css">
+    <title>Join The Game</title>
 </head>
 
 <body>
+    <nav>
+        <div id="icon">
+            <img src="assets/pencil.png" alt="na">
+            <h6>WORDPLAY</h6>
+        </div>
+    </nav>
 
-    <section id="main">
-        <canvas id=myCanvas height="600px" width="900px"></canvas>
+    <section id="main" style="justify-content: center; align-items: center;">
+        <form action="" id="entry">
+            <input type="text" placeholder="Enter your name " name="myName" id="myName">
+            <input type="text" placeholder="Enter the room id " name="roomId" id="myId">
+        </form>
+        <div id="options">
+            <button class="btn" onclick="joinRoom()">Join</button>
+            <button class="btn" onclick="joinRoom()">Create</button>
+        </div>
+
     </section>
-
     <script src="/socket.io/socket.io.js"></script>
-    <script src="main.js"></script>
+    <script src="room.js"></script>
 </body>
 
 </html>
