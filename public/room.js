@@ -1,8 +1,17 @@
 var socket = io();
-function joinRoom() {
-    var name = document.getElementById('myName');
-    var id = document.getElementById('myId');
-    console.log(id.value + " " + name.value);
-    socket.emit('create', id);
+var room = "";
+var name = "";
 
-}
+const { username, roomname } = Qs.parse(window.location.search, {
+    ignoreQueryPrefix: true
+});
+console.log(username + " " + roomname, + " are used");
+socket.emit('joinRoom', { username, roomname });
+
+socket.on('message', message => {
+    console.log(message);
+});
+socket.on('roomUsers', ({ room, users }) => {
+    console.log(room);
+    console.log(users);
+});

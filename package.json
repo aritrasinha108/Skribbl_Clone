@@ -4,7 +4,7 @@
   "description": "A game that is identical to skribbl",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,7 @@
     "url": "https://github.com/aritrasinha108/Skribbl_Clone/issues"
   },
   "homepage": "https://github.com/aritrasinha108/Skribbl_Clone#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }

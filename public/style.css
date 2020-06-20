@@ -61,7 +61,7 @@ nav::before {
 {
     content: "";
     z-index: -1;
-    background: url('assets/bg.jpg') no-repeat center center/cover;
+    background: url('assets/bg2.jpg') no-repeat center center/cover;
     background-color: white;
     opacity: 0.4;
     height: 100vh;
@@ -107,8 +107,15 @@ nav::before {
     border-radius: 0px 5px 5px 0px;
     box-shadow: 2px 2px 2px teal;
     border: none;
-    color: brown;
-    background-color: #deb8874f;
+    color: teal;
+    background-color: #ffc7849e;
+    font-weight: bold;
+    font-style: italic;
+    
+}
+input:focus
+{
+    outline: none;
 }
 .btn
 {
@@ -144,45 +151,58 @@ flex-wrap: wrap;
     top: 2px;
     left: 20px;
 }
-#color1
+
+#red
 {
-    margin: 0px;
+    margin: 0px 3px;
     background-color: red;
     width: 40px;
     height: 40px;
     border: 2px solid red;
-    color: yellow;
+    
 }
-#color2
+#blue
 {
-    margin: 0px;
-    background-color: white;
+    margin: 0px 3px;
+    background-color: blue;
     width: 40px;
     height: 40px;
-    border: 2px solid white;
-    color: yellow;
+    border: 2px solid blue;
+    
 }
 
-#color3
+#green
 {
-    margin: 0px;
+    margin: 0px 3px;
     background-color: green;
     width: 40px;
     height: 40px;
     border: 2px solid green;
-    color: yellow;
+    
 
 }
-#color4
+#black
 {
-    margin: 0px;
+    margin: 0px 3px;
     background-color: black;
     width: 40px;
     height: 40px;
     border: 2px solid black;
-    color: yellow;
+    
 }
-#color1:hover, #color2:hover, #color3:hover, #color4:hover
+#white
 {
-border: 5px solid yellow;
+    margin: 0px 3px;
+    background:url('assets/eraser.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+}
+
+.colorOptions
+{
+    z-index: 2;
 }

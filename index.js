@@ -1,23 +1,68 @@
-var express = require("express");
-var app = express();
+const express = require('express');
+const app = express();
 const http = require('http').Server(app);
-var io = require("socket.io")(http);
+const io = require('socket.io')(http);
+const port = process.env.PORT || 80;
+const {
+    userJoin,
+    getCurrentUser,
+    userLeave,
+    getRoomUsers
+} = require('./utilities/users.js');
 
 app.use(express.static(__dirname + '/public'));
-function onConnection(socket) {
-    socket.on('create', (room) => {
-        socket.join(room);
-        console.log("Joined room" + __dirname);
-        app.get('/game', function (req, res) {
-            console.log("Routing into the game");
 
-            res.sendFile(__dirname + '/public/game.html');
+function onConnection(socket) {
+    socket.on("joinRoom", ({ username, roomname }) => {
+        const user = userJoin(socket.id, username, roomname);
+
+        socket.join(user.roomname);
+        //Welcoming the user that joined
+        socket.emit("message", `Welcome to the room: ${user.roomname}`);
+
+        //Notifying others in the room
+        socket.broadcast.to(user.roomname).emit("message", `${user.username} has joined the room`);
+
+
+
+        socket.on("drawing", (data) => {
+            // console.log(room.name + " is Drawing");
+            // socket.broadcast.emit('drawing', data);
+            socket.broadcast.to(user.roomname).emit('drawing', data);
+        });
+        // Send users and room info
+        io.to(user.roomname).emit('roomUsers', {
+            room: user.roomname,
+            users: getRoomUsers(user.roomname)
         });
     });
-    socket.on('drawing', (data) => {
-        socket.broadcast.emit('drawing', data);
+
+
+
+
+
+    socket.on('disconnect', () => {
+        const user = userLeave(socket.id);
+
+        if (user) {
+            io.to(user.roomname).emit(
+                'message',
+                `${user.username} has left the chat`
+            );
+
+            // Send users and room info
+            io.to(user.roomname).emit('roomUsers', {
+                room: user.roomname,
+                users: getRoomUsers(user.roomname)
+            });
+        }
     });
+
+
+
 }
+
+
 io.on('connection', onConnection);
-const port = process.env.PORT || 80;
-http.listen(port, () => { console.log('Listening at' + port) });
+
+http.listen(port, () => console.log('listening on port ' + port));

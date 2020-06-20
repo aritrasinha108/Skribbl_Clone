@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
     <title>Join The Game</title>
 </head>
@@ -17,13 +19,14 @@
     </nav>
 
     <section id="main" style="justify-content: center; align-items: center;">
-        <form action="" id="entry">
-            <input type="text" placeholder="Enter your name " name="myName" id="myName">
-            <input type="text" placeholder="Enter the room id " name="roomId" id="myId">
+        <form action="game.html" id="entry" autocomplete="off">
+            <input type="text" placeholder="Enter your name " name="myName" id="myName" autocomplete="off" required>
+            <input type="text" placeholder="Enter the room id " name="roomId" id="myId" autocomplete="off" required>
+            <button class="btn" onclick="joinRoom()" type="submit">Join</button>
+
         </form>
         <div id="options">
-            <button class="btn" onclick="joinRoom()">Join</button>
-            <button class="btn" onclick="joinRoom()">Create</button>
+
         </div>
 
     </section>
