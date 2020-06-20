@@ -1,28 +1,55 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var colors = document.getElementsByClassName('colorOptions');
-
 ctx.fillStyle = "white";
-
-
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 var drawing = false;
 var socket = io();
-
 ctx.lineWidth = 5;
 var current = {
     color: 'black',
     cap: 'round',
     width: 2
 };
+//Code for Room.js start
+
+
+
+var queryObjects = window.location.href.split('?')[1];
+// console.log(queryObjects);
+var params = queryObjects.split('&');
+var details = [];
+
+params.forEach(element => {
+    details.push(element.split("=")[1]);
+});
+// console.log(details);
+var username = details[0];
+var roomname = details[1];
+console.log(details[0] + " " + details[1], + " are used");
+socket.emit('joinRoom', { username, roomname });
+
+socket.on('message', message => {
+    console.log(message);
+});
+socket.on('roomUsers', ({ room, users }) => {
+    console.log(room);
+    console.log(users);
+});
+socket.on('drawing', otherDraws);
+//Code for room.js end
+
+
+
+
 
 
 canvas.addEventListener("mousemove", onMouseDrag, false);
 canvas.addEventListener("mouseup", onMouseUp, false);
 canvas.addEventListener("mousedown", onMouseDown, false);
 canvas.addEventListener("mouseout", onMouseUp, false);
-// colors.addEventListener('click', colorUpdate(event));
-socket.on('drawing', otherDraws);
+
+
 
 
 function colorUpdate(event) {
@@ -81,4 +108,6 @@ function onMouseDrag(e) {
 function otherDraws(data) {
     draw(data.a, data.b, data.c, data.d, data.color, false, data.width, data.cap);
 }
+
+
 

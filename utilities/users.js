@@ -3,6 +3,7 @@ function userJoin(id, username, roomname) {
     var user = { id, username, roomname };
     users.push(user);
     console.log(user);
+
     console.log("inside userJoin");
     return user;
 }

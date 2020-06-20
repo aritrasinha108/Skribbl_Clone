@@ -16,24 +16,23 @@ function onConnection(socket) {
     socket.on("joinRoom", ({ username, roomname }) => {
         const user = userJoin(socket.id, username, roomname);
 
-        socket.join(user.roomname);
+        socket.join(roomname);
         //Welcoming the user that joined
-        socket.emit("message", `Welcome to the room: ${user.roomname}`);
+        socket.emit("message", `Welcome to the room: ${roomname}`);
 
         //Notifying others in the room
-        socket.broadcast.to(user.roomname).emit("message", `${user.username} has joined the room`);
+        socket.broadcast.to(roomname).emit("message", `${username} has joined the room`);
 
 
 
         socket.on("drawing", (data) => {
-            // console.log(room.name + " is Drawing");
-            // socket.broadcast.emit('drawing', data);
-            socket.broadcast.to(user.roomname).emit('drawing', data);
+            console.log(username + " is derawing");
+            socket.broadcast.to(roomname).emit('drawing', data);
         });
         // Send users and room info
-        io.to(user.roomname).emit('roomUsers', {
-            room: user.roomname,
-            users: getRoomUsers(user.roomname)
+        io.to(roomname).emit('roomUsers', {
+            room: roomname,
+            users: getRoomUsers(roomname)
         });
     });
 
@@ -47,7 +46,7 @@ function onConnection(socket) {
         if (user) {
             io.to(user.roomname).emit(
                 'message',
-                `${user.username} has left the chat`
+                `${user.username} has left the room`
             );
 
             // Send users and room info
