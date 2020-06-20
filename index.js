@@ -26,7 +26,7 @@ function onConnection(socket) {
 
 
         socket.on("drawing", (data) => {
-            console.log(username + " is derawing");
+            // console.log(username + " is derawing");
             socket.broadcast.to(roomname).emit('drawing', data);
         });
         // Send users and room info

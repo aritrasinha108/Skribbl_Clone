@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
-        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
     <title>Join The Game</title>
 </head>
@@ -13,15 +11,20 @@
 <body>
     <nav>
         <div id="icon">
-            <img src="assets/pencil.png" alt="na">
+            <img src="assets/icon.png" alt="">
             <h6>WORDPLAY</h6>
+        </div>
+        <div class="navbar">
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+            <a href="#">Ping</a>
         </div>
     </nav>
 
-    <section id="main" style="justify-content: center; align-items: center;">
+    <section id="main_landing" style="justify-content: center; align-items: center;">
         <form action="game.html" id="entry" autocomplete="off">
-            <input type="text" placeholder="Enter your name " name="myName" id="myName" autocomplete="off" required>
-            <input type="text" placeholder="Enter the room id " name="roomId" id="myId" autocomplete="off" required>
+            <input type="text" placeholder="Enter your name " class="info" name="myName" id="myName" autocomplete="off" required>
+            <input type="text" placeholder="Enter the room id " class="info" name="roomId" id="myId" autocomplete="off" required>
             <button class="btn" onclick="joinRoom()" type="submit">Join</button>
 
         </form>
