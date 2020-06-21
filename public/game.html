@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body style="display: flex; flex-direction: row; justify-content: space-between;">
 
     <section id="main_game">
         <div class="colors">
@@ -23,11 +23,17 @@
         </div>
         <canvas id=myCanvas height="600px" width="900px"></canvas>
     </section>
+    <section id="chat">
+        <div id="msg">
+            <input type="text" name="chat" id="chatmsg" placeholder="Enter message or word">
+            <button id="msgbtn" onclick="sendMsg()"></button>
+        </div>
+    </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js"
         integrity="sha256-ijqLssetA1NMNjZ+w1zaUafQQLm4IW5OoM8O+4tatME=" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="main.js"></script>
-    <!-- <script src="room.js"></script> -->
+
 </body>
 
 </html>

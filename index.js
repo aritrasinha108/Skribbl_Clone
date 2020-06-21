@@ -24,10 +24,14 @@ function onConnection(socket) {
         socket.broadcast.to(roomname).emit("message", `${username} has joined the room`);
 
 
-
+        //Details about the drawing
         socket.on("drawing", (data) => {
             // console.log(username + " is derawing");
             socket.broadcast.to(roomname).emit('drawing', data);
+        });
+        //Details about the message sent by user
+        socket.on("chat", (message) => {
+            io.to(roomname).emit('chat', message);
         });
         // Send users and room info
         io.to(roomname).emit('roomUsers', {
