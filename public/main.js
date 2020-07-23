@@ -42,16 +42,7 @@ function sendMsg() {
 
 
 }
-socket.on('timer', time => {
-    ctx.font = "24px Comic Sans";
-    ctx.fillStyle = "white";
-    ctx.fillText(`${time - 1}`, 400, 400, 24);
 
-    ctx.fillStyle = "red";
-    ctx.fillText(`${time}`, 400, 400, 24);
-
-
-});
 
 //Mesaage from the sever when someone joins or leaves
 socket.on('message', message => {
