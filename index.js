@@ -1,3 +1,7 @@
+// Setup and declarations
+let words = ["boy", "girl", "cup", "glass", "water", "apple"];
+let currentWord = words[2];
+var currentDrawing = 0;
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
@@ -9,16 +13,27 @@ const {
     userLeave,
     getRoomUsers
 } = require('./utilities/users.js');
+const { createContext } = require('vm');
+
 
 app.use(express.static(__dirname + '/public'));
+// Changing the word
+function changeWord() {
+    var index = Math.floor(Math.random() * words.length);
+    currentWord = words[index];
+}
+
 
 function onConnection(socket) {
+
     socket.on("joinRoom", ({ username, roomname }) => {
         const user = userJoin(socket.id, username, roomname);
-
+        let currentUser = getRoomUsers(roomname)[currentDrawing];
         socket.join(roomname);
         //Welcoming the user that joined
+
         socket.emit("message", `Welcome to the room: ${roomname}`);
+        io.to(roomname).emit('permit', { currentUser, currentWord });
 
         //Notifying others in the room
         socket.broadcast.to(roomname).emit("message", `${username} has joined the room`);
@@ -31,14 +46,54 @@ function onConnection(socket) {
         });
         //Details about the message sent by user
         socket.on("chat", (message) => {
-            io.to(roomname).emit('chat', message);
+            // If the message sent is same as the word
+            if (message.message.toUpperCase() == currentWord.toUpperCase()) {
+
+                message.message = `${message.username} has guessed the word`;
+                message.username = "Skribble bot"
+                io.to(roomname).emit('chat', message);
+                // Changing the word
+                changeWord();
+                console.log(currentWord);
+                // Changing the user who is drawing
+                var users = getRoomUsers(roomname);
+                if (currentDrawing == users.length - 1) {
+                    currentDrawing = 0;
+                }
+                else {
+                    currentDrawing++;
+                }
+                let currentUser = users[currentDrawing];
+                io.to(roomname).emit('permit', { currentUser, currentWord });
+
+
+
+            }
+            // If the message sent is just a chat message
+            else {
+                io.to(roomname).emit('chat', message);
+            }
+
+
+
         });
         // Send users and room info
         io.to(roomname).emit('roomUsers', {
             room: roomname,
             users: getRoomUsers(roomname)
         });
+
     });
+    function addTimer(roomname) {
+        time = 30;
+        setInterval(() => {
+
+            if (time > 0)
+                io.to(roomname).emit('timer', time);
+            console.log(time);
+            time--;
+        }, 1000);
+    }
 
 
 
@@ -69,3 +124,4 @@ function onConnection(socket) {
 io.on('connection', onConnection);
 
 http.listen(port, () => console.log('listening on port ' + port));
+
