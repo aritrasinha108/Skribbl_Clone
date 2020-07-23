@@ -84,17 +84,7 @@ function onConnection(socket) {
         });
 
     });
-    function addTimer(roomname) {
-        time = 30;
-        setInterval(() => {
-
-            if (time > 0)
-                io.to(roomname).emit('timer', time);
-            console.log(time);
-            time--;
-        }, 1000);
-    }
-
+   
 
 
 
