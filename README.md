@@ -3,4 +3,4 @@
 #### Salient features are : <br>
 #### *user-defined rooms functionality <br>
 #### * Chat functionality within it <br>
-#### * Diffrent type of color for the brush
+#### * Color changing functionality
