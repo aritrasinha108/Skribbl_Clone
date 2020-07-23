@@ -46,9 +46,10 @@ function onConnection(socket) {
         });
         //Details about the message sent by user
         socket.on("chat", (message) => {
+            let current = getRoomUsers(roomname)[currentDrawing]
             // If the message sent is same as the word
-            if (message.message.toUpperCase() == currentWord.toUpperCase()) {
-
+            if (message.message.toUpperCase() == currentWord.toUpperCase() && message.username != current.username) {
+                io.to(roomname).emit("clear", true);
                 message.message = `${message.username} has guessed the word`;
                 message.username = "Skribble bot"
                 io.to(roomname).emit('chat', message);
@@ -84,7 +85,7 @@ function onConnection(socket) {
         });
 
     });
-   
+
 
 
 

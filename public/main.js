@@ -1,4 +1,8 @@
 var canvas = document.getElementById("myCanvas");
+var sendButton = document.getElementById('send');
+sendButton.addEventListener("click", function (event) {
+    event.preventDefault();
+})
 var ctx = canvas.getContext("2d");
 var colors = document.getElementsByClassName('colorOptions');
 ctx.fillStyle = "white";
@@ -49,6 +53,11 @@ socket.on('message', message => {
     console.log(message);
     displayMessage("Skribble bot", message);
     chat.scrollTop = chat.scrollHeight;
+});
+socket.on("clear", (data) => {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle.fillStyle = color;
 });
 
 //Message from the server giving the details about the room and the users

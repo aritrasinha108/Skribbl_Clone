@@ -25,11 +25,11 @@
         </div>
 
     </section>
-    <div id="message-container">
+    <form id="message-container">
         <input type="text" name="message" id="message" placeholder="Enter the message here...." autocomplete="off">
-        <button id="send" onclick="sendMsg()"> <img src="./assets/send.png" alt="" id="send-icon">
+        <button id="send" type="submit" onclick="sendMsg()"> <img src="./assets/download.png" alt="" id="send-icon">
         </button>
-    </div>
+    </form>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="main.js"></script>
