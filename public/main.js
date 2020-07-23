@@ -1,5 +1,3 @@
-
-// Basic Setup and declarations
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var colors = document.getElementsByClassName('colorOptions');
@@ -15,6 +13,7 @@ var current = {
 };
 
 
+let permit = false;
 
 // Obtaining the room name and the user name
 var queryObjects = window.location.href.split('?')[1];
@@ -35,16 +34,30 @@ socket.emit('joinRoom', { username, roomname });
 
 //Sending the message to the room
 function sendMsg() {
-    var msg = document.getElementById('chatmsg');
+    var msg = document.getElementById('message');
     console.log(msg.value);
     var message = msg.value;
     socket.emit('chat', { message, username });
 
+
+
 }
+socket.on('timer', time => {
+    ctx.font = "24px Comic Sans";
+    ctx.fillStyle = "white";
+    ctx.fillText(`${time - 1}`, 400, 400, 24);
+
+    ctx.fillStyle = "red";
+    ctx.fillText(`${time}`, 400, 400, 24);
+
+
+});
 
 //Mesaage from the sever when someone joins or leaves
 socket.on('message', message => {
     console.log(message);
+    displayMessage("Skribble bot", message);
+    chat.scrollTop = chat.scrollHeight;
 });
 
 //Message from the server giving the details about the room and the users
@@ -52,11 +65,25 @@ socket.on('roomUsers', ({ room, users }) => {
     console.log(room);
     console.log(users);
 });
+// Giving one user at a time the permission to draw
+socket.on('permit', (data) => {
+    if (socket.id == data.currentUser.id) {
+        permit = true
+        displayMessage("Skribble bot", "You are drawing");
+        displayMessage("Skribble bot", "The word is " + data.currentWord);
 
+    }
+    else {
+        permit = false;
+        displayMessage("Skribble bot", data.currentUser.username + " is drawing");
+
+    }
+});
 //Giving the data when someone draws
 socket.on('drawing', otherDraws);
 socket.on('chat', message => {
     console.log("Message sent by " + message.username + ": " + message.message);
+    displayMessage(message.username, message.message);
 });
 
 //Adding different events for the mouse inside the canvas
@@ -65,6 +92,7 @@ canvas.addEventListener("mouseup", onMouseUp, false);
 canvas.addEventListener("mousedown", onMouseDown, false);
 canvas.addEventListener("mouseout", onMouseUp, false);
 
+// Checking for authority to draw
 
 
 //To update the color of the brush inside the canvas 
@@ -119,7 +147,7 @@ function onMouseDown(e) {
 
 //When mouse is moved
 function onMouseDrag(e) {
-    if (!drawing) return;
+    if (!drawing || !permit) return;
     else {
         draw(current.x, current.y, e.clientX, e.clientY, current.color, true, current.width, current.cap);
         current.x = e.clientX;
@@ -133,6 +161,17 @@ function onMouseDrag(e) {
 function otherDraws(data) {
     draw(data.a, data.b, data.c, data.d, data.color, false, data.width, data.cap);
 }
+// Displaying the message and deciding it's style based on the sender
 
-
-
+function displayMessage(username, message) {
+    const div = document.createElement("div");
+    if (username == "Skribble bot") {
+        div.classList.add("bot-message");
+        div.innerHTML = `${message}`;
+    }
+    else {
+        div.classList.add("message-box");
+        div.innerHTML = `<span class="name">${username}</span> ${message}`;
+    }
+    document.getElementById("chat").appendChild(div);
+} 

@@ -5,12 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canvas</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
-        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body style="display: flex; flex-direction: row; justify-content: space-between;">
+<body>
 
     <section id="main_game">
         <div class="colors">
@@ -21,16 +19,18 @@
             <button id="yellow" class="colorOptions color yellow" onclick="colorUpdate(event)"></button>
             <button id="white" class="colorOptions color white" onclick="colorUpdate(event)"></button>
         </div>
-        <canvas id=myCanvas height="600px" width="900px"></canvas>
-    </section>
-    <section id="chat">
-        <div id="msg">
-            <input type="text" name="chat" id="chatmsg" placeholder="Enter message or word">
-            <button id="msgbtn" onclick="sendMsg()"></button>
+        <canvas id=myCanvas height="600px" width="700px"></canvas>
+        <div id="chat">
+
         </div>
+
     </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js"
-        integrity="sha256-ijqLssetA1NMNjZ+w1zaUafQQLm4IW5OoM8O+4tatME=" crossorigin="anonymous"></script>
+    <div id="message-container">
+        <input type="text" name="message" id="message" placeholder="Enter the message here...." autocomplete="off">
+        <button id="send" onclick="sendMsg()"> <img src="./assets/send.png" alt="" id="send-icon">
+        </button>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="main.js"></script>
 
