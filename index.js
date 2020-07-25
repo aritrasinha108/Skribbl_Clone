@@ -33,7 +33,8 @@ function onConnection(socket) {
         //Welcoming the user that joined
 
         socket.emit("message", `Welcome to the room: ${roomname}`);
-        io.to(roomname).emit('permit', { currentUser, currentWord });
+
+        socket.emit('permit', { currentUser, currentWord });
 
         //Notifying others in the room
         socket.broadcast.to(roomname).emit("message", `${username} has joined the room`);

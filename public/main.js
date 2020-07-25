@@ -67,6 +67,7 @@ socket.on('roomUsers', ({ room, users }) => {
 });
 // Giving one user at a time the permission to draw
 socket.on('permit', (data) => {
+    console.log("Got the permit");
     if (socket.id == data.currentUser.id) {
         permit = true
         displayMessage("Skribble bot", "You are drawing");
@@ -76,6 +77,7 @@ socket.on('permit', (data) => {
     else {
         permit = false;
         displayMessage("Skribble bot", data.currentUser.username + " is drawing");
+
 
     }
 });
