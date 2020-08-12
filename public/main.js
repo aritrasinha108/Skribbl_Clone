@@ -57,7 +57,7 @@ socket.on('message', message => {
 socket.on("clear", (data) => {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle.fillStyle = color;
+    ctx.fillStyle = color;
 });
 
 //Message from the server giving the details about the room and the users

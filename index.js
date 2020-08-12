@@ -1,5 +1,5 @@
 // Setup and declarations
-let words = ["boy", "girl", "cup", "glass", "water", "apple"];
+let words = ["boy", "girl", "cup", "glass", "water", "apple", "steve jobs", "communism", "stab", "julius caesar", "big ben"];
 let currentWord = words[2];
 var currentDrawing = 0;
 const express = require('express');
