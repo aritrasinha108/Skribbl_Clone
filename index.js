@@ -7,14 +7,21 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 80;
+const mongoURI = require('./config/keys').mongoURI;
 const {
     userJoin,
     getCurrentUser,
     userLeave,
     getRoomUsers
 } = require('./utilities/users.js');
-const { createContext } = require('vm');
 
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI || mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => {
+    console.log('mongoDB connected....');
+})
+    .catch(err => {
+        throw err;
+    })
 
 app.use(express.static(__dirname + '/public'));
 // Changing the word
@@ -24,11 +31,13 @@ function changeWord() {
 }
 
 
-function onConnection(socket) {
+async function onConnection(socket) {
 
-    socket.on("joinRoom", ({ username, roomname }) => {
-        const user = userJoin(socket.id, username, roomname);
-        let currentUser = getRoomUsers(roomname)[currentDrawing];
+    socket.on("joinRoom", async ({ username, roomname }) => {
+        const user = await userJoin(socket.id, username, roomname);
+        let roomPlayers = await getRoomUsers(roomname);
+        let currentUser = roomPlayers[currentDrawing];
+        console.log('Drawing: ' + currentUser);
         socket.join(roomname);
         //Welcoming the user that joined
 
@@ -46,10 +55,11 @@ function onConnection(socket) {
             socket.broadcast.to(roomname).emit('drawing', data);
         });
         //Details about the message sent by user
-        socket.on("chat", (message) => {
-            let current = getRoomUsers(roomname)[currentDrawing]
+        socket.on("chat", async (message) => {
+            roomPlayers = await getRoomUsers(roomname);
+            let current = roomPlayers[currentDrawing];
             // If the message sent is same as the word
-            if (message.message.toUpperCase() == currentWord.toUpperCase() && message.username != current.username) {
+            if (message.message.toUpperCase() == currentWord.toUpperCase() && message.username != current.userName) {
                 io.to(roomname).emit("clear", true);
                 message.message = `${message.username} has guessed the word`;
                 message.username = "Skribble bot"
@@ -58,7 +68,7 @@ function onConnection(socket) {
                 changeWord();
                 console.log(currentWord);
                 // Changing the user who is drawing
-                var users = getRoomUsers(roomname);
+                var users = await getRoomUsers(roomname);
                 if (currentDrawing == users.length - 1) {
                     currentDrawing = 0;
                 }
@@ -66,6 +76,7 @@ function onConnection(socket) {
                     currentDrawing++;
                 }
                 let currentUser = users[currentDrawing];
+                console.log('Drawing: ' + currentUser);
                 io.to(roomname).emit('permit', { currentUser, currentWord });
 
 
@@ -80,9 +91,11 @@ function onConnection(socket) {
 
         });
         // Send users and room info
+        let roomUsers = await getRoomUsers(user.roomName);
+
         io.to(roomname).emit('roomUsers', {
             room: roomname,
-            users: getRoomUsers(roomname)
+            users: roomUsers
         });
 
     });
@@ -91,19 +104,20 @@ function onConnection(socket) {
 
 
 
-    socket.on('disconnect', () => {
-        const user = userLeave(socket.id);
-
+    socket.on('disconnect', async () => {
+        const user = await userLeave(socket.id);
+        console.log(user + " left");
         if (user) {
-            io.to(user.roomname).emit(
+            io.to(user.roomName).emit(
                 'message',
-                `${user.username} has left the room`
+                `${user.userName} has left the room`
             );
 
             // Send users and room info
-            io.to(user.roomname).emit('roomUsers', {
-                room: user.roomname,
-                users: getRoomUsers(user.roomname)
+            let roomUsers = await getRoomUsers(user.roomName);
+            io.to(user.roomName).emit('roomUsers', {
+                room: user.roomName,
+                users: roomUsers
             });
         }
     });
