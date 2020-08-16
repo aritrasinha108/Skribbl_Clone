@@ -1,29 +1,41 @@
-var users = [];
-function userJoin(id, username, roomname) {
-    var user = { id, username, roomname };
-    users.push(user);
+
+const User = require('../model/Users');
+async function userJoin(id, username, roomname) {
+
+    let user = new User({
+        userId: id,
+        userName: username,
+        roomName: roomname
+    });
+    await user.save();
+
+
+
     console.log(user);
 
     console.log("inside userJoin");
     return user;
 }
 
-function getCurrentUser(id) {
-    return users.find(user => user.id === id);
+async function getCurrentUser(id) {
+    const user = await User.findOne({ userId: id });
+    return user;
 }
 
 // User leaves chat
-function userLeave(id) {
-    const index = users.findIndex(user => user.id === id);
+async function userLeave(id) {
 
-    if (index !== -1) {
-        return users.splice(index, 1)[0];
-    }
+    let deleteduser = await User.findOneAndDelete({ userId: id })
+    console.log(deleteduser)
+    return deleteduser;
+
+
 }
 
 // Get room users
-function getRoomUsers(roomname) {
-    return users.filter(user => user.roomname === roomname);
+async function getRoomUsers(roomname) {
+
+    return await User.find({ roomName: roomname });
 }
 module.exports = {
     userJoin,

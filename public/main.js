@@ -58,7 +58,7 @@ socket.on('message', message => {
 socket.on("clear", (data) => {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle.fillStyle = color;
+    ctx.fillStyle = current.color;
 });
 
 //Message from the server giving the details about the room and the users
@@ -69,7 +69,7 @@ socket.on('roomUsers', ({ room, users }) => {
 // Giving one user at a time the permission to draw
 socket.on('permit', (data) => {
     console.log("Got the permit");
-    if (socket.id == data.currentUser.id) {
+    if (socket.id == data.currentUser.userId) {
         permit = true
         displayMessage("Skribble bot", "You are drawing");
         displayMessage("Skribble bot", "The word is " + data.currentWord);
@@ -78,8 +78,7 @@ socket.on('permit', (data) => {
     }
     else {
         permit = false;
-        displayMessage("Skribble bot", data.currentUser.username + " is drawing");
-       
+        displayMessage("Skribble bot", data.currentUser.userName + " is drawing");
 
 
     }
