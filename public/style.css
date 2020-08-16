@@ -198,6 +198,18 @@ span#name{
     margin: 5px 0px 5px 0px ;
     text-align: center;
 }
+/* css for the timer */
+.timer{
+    background: rgba(6, 228, 124, 0.92);
+    color: black;
+    font-weight: bolder;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    border-radius: 5px ;
+    font-size: 13px ;
+    padding: 5px 3px 5px 10px ;
+    margin: 5px 0px 5px 0px ;
+    text-align: center;
+}
 
 .message-box{
     background:linear-gradient(#00C6FF,#0078FF);
