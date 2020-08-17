@@ -1,6 +1,6 @@
 var canvas = document.getElementById("myCanvas");
 var sendButton = document.getElementById('send');
-const chat =document.getElementById("chat");
+const chat = document.getElementById("chat");
 sendButton.addEventListener("click", function (event) {
     event.preventDefault();
 })
@@ -74,7 +74,7 @@ socket.on('permit', (data) => {
         displayMessage("Skribble bot", "You are drawing");
         displayMessage("Skribble bot", "The word is " + data.currentWord);
         displayTimer(permit);
-        
+
     }
     else {
         permit = false;
@@ -178,31 +178,36 @@ function displayMessage(username, message) {
         div.innerHTML = `<span class="name">${username}</span> ${message}`;
     }
     document.getElementById("chat").appendChild(div);
-} 
+}
 
 
-function displayTimer(permit){
-  
+function displayTimer(permit) {
+
     console.log("inside the display timer")
     const div = document.createElement("div");
-    div.className="timer";
-    
-    var tick=30;
-    if(permit==true){
-    var myVar=setInterval(() => {
-        if (tick>=0 ) {
-            div.innerHTML=tick--
-              
-        }
-        else{
-            clearInterval(myVar);
-            const timer=document.querySelector(".timer");
-            timer.parentNode.removeChild(timer);
-        }
-       
-    }, 1000);
-    console.log(div)
-    chat.appendChild(div); 
-}
+    div.className = "timer";
+    chat.appendChild(div);
+
+    var tick = 30;
+    if (permit == true) {
+        var myVar = setInterval(() => {
+            if (tick >= 0) {
+                div.innerHTML = tick--
+
+            }
+            else {
+                clearInterval(myVar);
+                const timer = document.querySelector(".timer");
+                timer.parentNode.removeChild(timer);
+                var time = new Date();
+                console.log(time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds());
+                socket.emit("change", time);
+            }
+
+        }, 1000);
+
+
+        console.log(div)
+    }
 
 }

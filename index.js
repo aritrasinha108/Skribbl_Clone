@@ -16,6 +16,7 @@ const {
 } = require('./utilities/users.js');
 
 const mongoose = require('mongoose');
+const { time } = require('console');
 mongoose.connect(process.env.MONGODB_URI || mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => {
     console.log('mongoDB connected....');
 })
@@ -64,23 +65,6 @@ async function onConnection(socket) {
                 message.message = `${message.username} has guessed the word`;
                 message.username = "Skribble bot"
                 io.to(roomname).emit('chat', message);
-                // Changing the word
-                changeWord();
-                console.log(currentWord);
-                // Changing the user who is drawing
-                var users = await getRoomUsers(roomname);
-                if (currentDrawing == users.length - 1) {
-                    currentDrawing = 0;
-                }
-                else {
-                    currentDrawing++;
-                }
-                let currentUser = users[currentDrawing];
-                console.log('Drawing: ' + currentUser);
-                io.to(roomname).emit('permit', { currentUser, currentWord });
-
-
-
             }
             // If the message sent is just a chat message
             else {
@@ -89,6 +73,22 @@ async function onConnection(socket) {
 
 
 
+        });
+        socket.on('change', async (time) => {
+            // Changing the word
+            changeWord();
+            console.log(currentWord);
+            // Changing the user who is drawing
+            var users = await getRoomUsers(roomname);
+            if (currentDrawing == users.length - 1) {
+                currentDrawing = 0;
+            }
+            else {
+                currentDrawing++;
+            }
+            let currentUser = users[currentDrawing];
+            console.log('Drawing: ' + currentUser);
+            io.to(roomname).emit('permit', { currentUser, currentWord });
         });
         // Send users and room info
         let roomUsers = await getRoomUsers(user.roomName);
@@ -119,6 +119,7 @@ async function onConnection(socket) {
                 room: user.roomName,
                 users: roomUsers
             });
+
         }
     });
 
