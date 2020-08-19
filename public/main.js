@@ -1,6 +1,7 @@
 var canvas = document.getElementById("myCanvas");
 var sendButton = document.getElementById('send');
 const chat = document.getElementById("chat");
+const main_game=document.getElementById("main_game");
 sendButton.addEventListener("click", function (event) {
     event.preventDefault();
 })
@@ -62,26 +63,16 @@ socket.on("clear", (data) => {
 });
 
 //Message from the server giving the details about the room and the users
-socket.on('roomUsers', ({ room, users }) => {
-    console.log(room);
-    console.log(users);
+ socket.on('roomUsers', ({ room, users }) => {
+    // console.log(room);
+
+    console.log("this isnnumber of users ",users);
 });
 // Giving one user at a time the permission to draw
 socket.on('permit', (data) => {
-    console.log("Got the permit");
-    if (socket.id == data.currentUser.userId) {
-        permit = true
-        displayMessage("Skribble bot", "You are drawing");
-        displayMessage("Skribble bot", "The word is " + data.currentWord);
-        displayTimer(permit);
+//    permitFunction(data);
+popUpMessage(data);
 
-    }
-    else {
-        permit = false;
-        displayMessage("Skribble bot", data.currentUser.userName + " is drawing");
-
-
-    }
 });
 //Giving the data when someone draws
 socket.on('drawing', otherDraws);
@@ -193,7 +184,6 @@ function displayTimer(permit) {
         var myVar = setInterval(() => {
             if (tick >= 0) {
                 div.innerHTML = tick--
-
             }
             else {
                 clearInterval(myVar);
@@ -203,11 +193,38 @@ function displayTimer(permit) {
                 console.log(time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds());
                 socket.emit("change", time);
             }
-
         }, 1000);
-
-
         console.log(div)
     }
 
+}
+
+const permitFunction= (data)=>{
+    if (socket.id == data.currentUser.userId) {
+        permit = true
+        displayMessage("Skribble bot", "You are drawing");
+        displayMessage("Skribble bot", "The word is " + data.currentWord);
+        displayTimer(permit);
+        console.log("inside the permit function");
+    }
+    else {
+        permit = false;
+        displayMessage("Skribble bot", data.currentUser.userName + " is drawing");
+
+
+    }
+}
+
+function popUpMessage(data){
+    const popUpBox=document.createElement("div");
+    popUpBox.className = "popUpBox";
+    popUpBox.innerHTML=`
+        <h6>This is the heading of the popup</h6>
+        <button  id="popBtn">Start the Game</button>`
+        main_game.appendChild(popUpBox);
+        const popBtn=document.getElementById("popBtn");
+        popBtn.addEventListener('click',()=>{
+            console.log("content inside the data",data);
+            permitFunction(data)
+        });
 }
