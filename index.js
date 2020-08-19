@@ -8,6 +8,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 80;
 const mongoURI = require('./config/keys').mongoURI;
+var startTime;
 const {
     userJoin,
     getCurrentUser,
@@ -16,7 +17,7 @@ const {
 } = require('./utilities/users.js');
 
 const mongoose = require('mongoose');
-const { time } = require('console');
+
 mongoose.connect(process.env.MONGODB_URI || mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => {
     console.log('mongoDB connected....');
 })
@@ -45,7 +46,9 @@ async function onConnection(socket) {
         socket.emit("message", `Welcome to the room: ${roomname}`);
 
         socket.emit('permit', { currentUser, currentWord });
-
+        if (currentUser.userId != socket.id && typeof startTime != 'undefined') {
+            socket.emit('start time', startTime);
+        }
         //Notifying others in the room
         socket.broadcast.to(roomname).emit("message", `${username} has joined the room`);
 
@@ -97,6 +100,14 @@ async function onConnection(socket) {
             room: roomname,
             users: roomUsers
         });
+        socket.on('start', (time) => {
+            startTime = new Date(time);
+            console.log(time);
+            var then = new Date(time);
+
+
+            socket.to(roomname).broadcast.emit('start time', then);
+        })
 
     });
 
