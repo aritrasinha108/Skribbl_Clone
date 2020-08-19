@@ -6,6 +6,18 @@
 
 }
 
+.popUpBox{
+    position: absolute;
+    border-radius: 20px;
+    z-index: 3;
+    overflow: hidden;
+    top: 20%;
+    left: 30%;
+    height: 50%;
+    width: 30%;
+    background-color: rgb(159, 243, 159);
+
+}
 
 
 
