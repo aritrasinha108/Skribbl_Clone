@@ -7,6 +7,8 @@
 }
 
 .popUpBox{
+    opacity: .7;
+    margin: 10px;
     position: absolute;
     border-radius: 20px;
     z-index: 3;

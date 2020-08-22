@@ -227,8 +227,21 @@ socket.on('start time', (time) => {
 function popUpMessage(data) {
     const popUpBox = document.createElement("div");
     popUpBox.className = "popUpBox";
+    list=[];
+    socket.on('roomUsers', ({ room, users }) => {
+        users.forEach(element => {
+           list+=element.userName; 
+        });
+    
+        console.log("this isnnumber of users ", users);
+    });
+    console.log(list,"is the list of users")
+
     popUpBox.innerHTML = `
         <h6>This is the heading of the popup</h6>
+        <ul>
+        
+        </ul>
         <button  id="popBtn">Start the Game</button>`
     main_game.appendChild(popUpBox);
     const popBtn = document.getElementById("popBtn");
