@@ -8,12 +8,14 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 80;
 const mongoURI = require('./config/keys').mongoURI;
+var guessedUsers = [];
 var startTime;
 const {
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers
+    getRoomUsers,
+    addPoints
 } = require('./utilities/users.js');
 
 const mongoose = require('mongoose');
@@ -65,9 +67,15 @@ async function onConnection(socket) {
             // If the message sent is same as the word
             if (message.message.toUpperCase() == currentWord.toUpperCase() && message.username != current.userName) {
                 io.to(roomname).emit("clear", true);
+                // guessedUsers.push(socket.id);
+                // var now = new Date();
+
+                // var seconds = 30- Math.round((now - startTime) / 1000);
+                // addPoints(seconds,socket.id)
                 message.message = `${message.username} has guessed the word`;
                 message.username = "Skribble bot"
                 io.to(roomname).emit('chat', message);
+
             }
             // If the message sent is just a chat message
             else {
@@ -81,6 +89,7 @@ async function onConnection(socket) {
             // Changing the word
             changeWord();
             console.log(currentWord);
+            // guessedUsers = [];
             // Changing the user who is drawing
             var users = await getRoomUsers(roomname);
             if (currentDrawing == users.length - 1) {
@@ -92,6 +101,8 @@ async function onConnection(socket) {
             let currentUser = users[currentDrawing];
             console.log('Drawing: ' + currentUser);
             io.to(roomname).emit('permit', { currentUser, currentWord });
+            io.to(roomname).emit('clear', 0);
+            // socket.emit('permit', { currentUser, currentWord });
         });
         // Send users and room info
         let roomUsers = await getRoomUsers(user.roomName);
@@ -104,9 +115,7 @@ async function onConnection(socket) {
             startTime = new Date(time);
             console.log(time);
             var then = new Date(time);
-
-
-            socket.to(roomname).broadcast.emit('start time', then);
+            socket.broadcast.to(roomname).emit('start time', then);
         })
 
     });

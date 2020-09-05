@@ -31,8 +31,14 @@ async function userLeave(id) {
 
 
 }
+async function addPoints(points, id) {
+    let guessedUser = await User.findOne({ userId: id });
+    guessedUser.points += points;
+    await User.save();
+    return guessedUser.points;
+}
 
-// Get room users
+// Get room usersS
 async function getRoomUsers(roomname) {
 
     return await User.find({ roomName: roomname });
@@ -41,5 +47,6 @@ module.exports = {
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers
+    getRoomUsers,
+    addPoints
 };

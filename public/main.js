@@ -70,12 +70,16 @@ socket.on('roomUsers', ({ room, users }) => {
 });
 // Giving one user at a time the permission to draw
 socket.on('permit', (data) => {
-    if (data.currentUser.userId == socket.id) {
-
+    console.log(data);
+    if (data.currentUser.userName == username) {
+        console.log(data.currentUser.userName);
+        // console.log(data.currentUser.userName);
         popUpMessage(data);
     }
     else {
+
         permit = false;
+        console.log(permit);
         displayMessage("Skribble bot", data.currentUser.userName + " is drawing");
 
 
@@ -200,7 +204,8 @@ function displayTimer(seconds) {
             timer.parentNode.removeChild(timer);
             var time = new Date();
             console.log(time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds());
-            socket.emit("change", time);
+            if (permit == true) socket.emit("change", time);
+            permit = false;
         }
     }, 1000);
     console.log(div)
@@ -227,15 +232,15 @@ socket.on('start time', (time) => {
 function popUpMessage(data) {
     const popUpBox = document.createElement("div");
     popUpBox.className = "popUpBox";
-    list=[];
+    list = [];
     socket.on('roomUsers', ({ room, users }) => {
         users.forEach(element => {
-           list+=element.userName; 
+            list += element.userName;
         });
-    
+
         console.log("this isnnumber of users ", users);
     });
-    console.log(list,"is the list of users")
+    console.log(list, "is the list of users")
 
     popUpBox.innerHTML = `
         <h6>This is the heading of the popup</h6>
