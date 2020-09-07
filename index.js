@@ -125,7 +125,30 @@ async function onConnection(socket) {
 
 
     socket.on('disconnect', async () => {
+        const leftUser = await getCurrentUser(socket.id);
+        let thenUsers = await getRoomUsers(leftUser.roomName);
         const user = await userLeave(socket.id);
+        let index = thenUsers.findIndex(u => u.userId == leftUser.userId);
+
+        console.log(index);
+        console.log(currentDrawing);
+        let roomUsers = await getRoomUsers(user.roomName);
+
+        if (index == currentDrawing) {
+            if (currentDrawing >= roomUsers.length - 1)
+                currentDrawing = 0;
+
+            console.log(currentDrawing);
+            let currentUser = roomUsers[currentDrawing];
+            console.log("changed:" + currentUser);
+
+            changeWord();
+
+            io.to(leftUser.roomName).emit('permit', { currentUser, currentWord });
+            io.to(leftUser.roomName).emit('clear', 0);
+        }
+
+
         console.log(user + " left");
         if (user) {
             io.to(user.roomName).emit(
@@ -134,7 +157,7 @@ async function onConnection(socket) {
             );
 
             // Send users and room info
-            let roomUsers = await getRoomUsers(user.roomName);
+
             io.to(user.roomName).emit('roomUsers', {
                 room: user.roomName,
                 users: roomUsers

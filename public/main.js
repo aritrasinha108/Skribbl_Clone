@@ -70,7 +70,13 @@ socket.on('roomUsers', ({ room, users }) => {
 });
 // Giving one user at a time the permission to draw
 socket.on('permit', (data) => {
-    console.log(data);
+    console.log("permit data: " + data);
+    let timers = document.getElementsByClassName("timer");
+    for (let i = 0; i < timers.length; i++) {
+        console.log("deleting" + i);
+        document.getElementById('chat').removeChild(timers[i]);
+    }
+
     if (data.currentUser.userName == username) {
         console.log(data.currentUser.userName);
         // console.log(data.currentUser.userName);
