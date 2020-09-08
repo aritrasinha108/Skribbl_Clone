@@ -34,7 +34,7 @@ async function userLeave(id) {
 async function addPoints(points, id) {
     let guessedUser = await User.findOne({ userId: id });
     guessedUser.points += points;
-    await User.save();
+    await guessedUser.save();
     return guessedUser.points;
 }
 

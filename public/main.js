@@ -170,6 +170,18 @@ function onMouseDrag(e) {
 
 
 }
+socket.on('results', players => {
+    var body = document.getElementsByTagName('body')[0];
+    body.innerHTML = ``;
+    players.forEach(p => {
+        var score = document.createElement('div');
+        score.setAttribute("class", "score");
+        score.innerHTML = ` ${p.userName} - ${p.points}`;
+        body.appendChild(score);
+    });
+
+
+})
 
 //When someone else draws
 function otherDraws(data) {

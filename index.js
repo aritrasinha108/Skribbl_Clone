@@ -9,6 +9,8 @@ const io = require('socket.io')(http);
 const port = process.env.PORT || 80;
 const mongoURI = require('./config/keys').mongoURI;
 var guessedUsers = [];
+const fs = require('fs');
+
 var startTime;
 const {
     userJoin,
@@ -17,6 +19,7 @@ const {
     getRoomUsers,
     addPoints
 } = require('./utilities/users.js');
+let rounds = 1;
 
 const mongoose = require('mongoose');
 
@@ -28,13 +31,36 @@ mongoose.connect(process.env.MONGODB_URI || mongoURI, { useNewUrlParser: true, u
     })
 
 app.use(express.static(__dirname + '/public'));
+
 // Changing the word
 function changeWord() {
     var index = Math.floor(Math.random() * words.length);
     currentWord = words[index];
 }
+async function changeUser(length, a, room) {
+
+    if (currentDrawing >= length - 1) {
+        if (rounds > 1) {
+            currentDrawing = 0;
+            rounds--;
+            console.log("round:" + rounds);
+        }
+        else {
+            let roomPLayers = await getRoomUsers(room);
+            io.to(room).emit('results', roomPLayers);
+            console.log("Game Over");
 
 
+        }
+    }
+    else {
+        if (a == 1)
+            currentDrawing++;
+    }
+
+
+
+}
 async function onConnection(socket) {
 
     socket.on("joinRoom", async ({ username, roomname }) => {
@@ -65,17 +91,27 @@ async function onConnection(socket) {
             roomPlayers = await getRoomUsers(roomname);
             let current = roomPlayers[currentDrawing];
             // If the message sent is same as the word
-            if (message.message.toUpperCase() == currentWord.toUpperCase() && message.username != current.userName) {
-                io.to(roomname).emit("clear", true);
-                // guessedUsers.push(socket.id);
-                // var now = new Date();
+            if (message.message.toUpperCase() == currentWord.toUpperCase() && message.username != current.userName && guessedUsers.find(p => p == message.userName) == null) {
+                // io.to(roomname).emit("clear", true);
+                guessedUsers.push(message.userName);
+                var now = new Date();
 
-                // var seconds = 30- Math.round((now - startTime) / 1000);
-                // addPoints(seconds,socket.id)
+                var seconds = 30 - Math.round((now - startTime) / 1000);
+                addPoints(seconds, socket.id);
                 message.message = `${message.username} has guessed the word`;
                 message.username = "Skribble bot"
                 io.to(roomname).emit('chat', message);
+                roomPlayers = await getRoomUsers(roomname);
+                // if (guessedUsers.length == roomPlayers.length - 1) {
 
+                //     changeWord();
+                //     changeUser(roomPlayers.length, 1, roomname);
+                //     currentUser = roomPlayers[currentDrawing];
+                //     io.to(roomname).emit('permit', { currentUser, currentWord });
+                //     io.to(roomname).emit('clear', true);
+                //     guessedUsers = [];
+
+                // }
             }
             // If the message sent is just a chat message
             else {
@@ -87,17 +123,14 @@ async function onConnection(socket) {
         });
         socket.on('change', async (time) => {
             // Changing the word
+            guessedUsers = [];
             changeWord();
             console.log(currentWord);
             // guessedUsers = [];
             // Changing the user who is drawing
             var users = await getRoomUsers(roomname);
-            if (currentDrawing == users.length - 1) {
-                currentDrawing = 0;
-            }
-            else {
-                currentDrawing++;
-            }
+
+            changeUser(users.length, 1, roomname);
             let currentUser = users[currentDrawing];
             console.log('Drawing: ' + currentUser);
             io.to(roomname).emit('permit', { currentUser, currentWord });
@@ -135,15 +168,15 @@ async function onConnection(socket) {
         let roomUsers = await getRoomUsers(user.roomName);
 
         if (index == currentDrawing) {
-            if (currentDrawing >= roomUsers.length - 1)
-                currentDrawing = 0;
+
+            changeUser(roomUsers.length, 0, user.roomName);
 
             console.log(currentDrawing);
             let currentUser = roomUsers[currentDrawing];
             console.log("changed:" + currentUser);
 
             changeWord();
-
+            guessedUsers = [];
             io.to(leftUser.roomName).emit('permit', { currentUser, currentWord });
             io.to(leftUser.roomName).emit('clear', 0);
         }
