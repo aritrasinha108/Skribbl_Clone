@@ -249,11 +249,8 @@ function popUpMessage(data) {
     console.log(list, "is the list of users")
 
     popUpBox.innerHTML = `
-        <h6>This is the heading of the popup</h6>
-        <ul>
-        
-        </ul>
-        <button  id="popBtn">Start the Game</button>`
+        <h3>Let's Go!!</h3>
+        <button  id="popBtn"> Start Game </button>`
     main_game.appendChild(popUpBox);
     const popBtn = document.getElementById("popBtn");
     popBtn.addEventListener('click', () => {
