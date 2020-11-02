@@ -6,11 +6,11 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 const mongoURI = require('./config/keys').mongoURI;
+const fs=require('fs');
 var guessedUsers = [];
-const fs = require('fs');
-
+app.set('view engine','ejs');
 var startTime;
 const {
     userJoin,
@@ -30,7 +30,36 @@ mongoose.connect(process.env.MONGODB_URI || mongoURI, { useNewUrlParser: true, u
         throw err;
     })
 
-app.use(express.static(__dirname + '/public'));
+
+app.use(express.urlencoded({extended:false}));    
+app.use(express.static('./public'));
+
+
+let username="";
+let roomname="";
+app.get('/',(req,res)=>{
+    res.render('index');
+})
+app.get('/canvas/:name&:room',(req,res)=>{
+   res.render('game');
+});
+
+app.post('/',(req,res)=>{
+    console.log(req.body);
+    username=req.body.myName;
+    roomname=req.body.roomId;
+    console.log("inside the post request");
+    res.redirect(`/canvas/${username}&${roomname}`);
+
+});
+app.get('/results/:roomname',async (req,res)=>{
+
+    let users= await getRoomUsers(req.params.roomname);
+
+    res.render('result',{users:users});
+
+
+})
 
 // Changing the word
 function changeWord() {
@@ -102,16 +131,7 @@ async function onConnection(socket) {
                 message.username = "Skribble bot"
                 io.to(roomname).emit('chat', message);
                 roomPlayers = await getRoomUsers(roomname);
-                // if (guessedUsers.length == roomPlayers.length - 1) {
-
-                //     changeWord();
-                //     changeUser(roomPlayers.length, 1, roomname);
-                //     currentUser = roomPlayers[currentDrawing];
-                //     io.to(roomname).emit('permit', { currentUser, currentWord });
-                //     io.to(roomname).emit('clear', true);
-                //     guessedUsers = [];
-
-                // }
+                
             }
             // If the message sent is just a chat message
             else {

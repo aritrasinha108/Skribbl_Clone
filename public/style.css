@@ -27,6 +27,27 @@
 
 
 }
+.popUpBox-end{
+    
+    margin: 10px;
+    position: absolute;
+    border-radius: 20px;
+    z-index: 3;
+    overflow: hidden;
+    top: 20%;
+    left: 30%;
+    height:50%;
+    width: 50%;
+    background-color: whitesmoke;
+    text-align: center;
+    font-size: large;
+    vertical-align:bottom;
+    box-shadow: 2px 10px 12px rgba(0,0,0,0.5);
+    
+    /* background: url('assets/back.jpg') no-repeat center center/cover; */
+
+
+}
 .popUpBox h3{
     font-family: 'Ranchers', cursive;
     color: rgb(207, 55, 80);

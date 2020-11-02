@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <title>Join The Game</title>
 </head>
 
@@ -22,17 +22,15 @@
     </nav>
 
     <section id="main_landing" style="justify-content: center; align-items: center;">
-        <form action="game.html" id="entry" autocomplete="off">
+        <form action="/" id="entry" method="POST" autocomplete="off">
             <input type="text" placeholder="Enter your name " class="info" name="myName" id="myName" autocomplete="off"
                 required>
             <input type="text" placeholder="Enter the room id " class="info" name="roomId" id="myId" autocomplete="off"
                 required>
             <button class="btn"  type="submit">Join</button>
-            <!-- onclick="joinRoom()" -->
+            
         </form>
-        <div id="options">
-
-        </div>
+        
 
     </section>
     <script src="/socket.io/socket.io.js"></script>

@@ -22,20 +22,16 @@ var current = {
 let permit = false;
 
 // Obtaining the room name and the user name
-var queryObjects = window.location.href.split('?')[1];
-// console.log(queryObjects);
+var queryObjects = window.location.pathname.split('/')[2];
+// console.log(window.location.pathname.split('/'));
+console.log(queryObjects);
 var params = queryObjects.split('&');
-var details = [];
 
-params.forEach(element => {
-    details.push(element.split("=")[1]);
-});
-// console.log(details);
-var username = details[0];
-var roomname = details[1];
-console.log(details[0] + " " + details[1], + " are used");
 
-//Joining the room 
+var username = params[0];
+var roomname = params[1];
+console.log(roomname + " " + username + " are used");
+
 socket.emit('joinRoom', { username, roomname });
 
 //Sending the message to the room
@@ -170,19 +166,63 @@ function onMouseDrag(e) {
 
 
 }
-socket.on('results', players => {
-    var body = document.getElementsByTagName('body')[0];
-    body.innerHTML = ``;
-    players.forEach(p => {
-        var score = document.createElement('div');
-        score.setAttribute("class", "score");
-        score.innerHTML = ` ${p.userName} - ${p.points}`;
-        body.appendChild(score);
-    });
+function addTable(players,endpopUpBox)
+{
+let div=document.createElement('div');
+
+div.setAttribute("class","mx-4 my-4 text-center");
+let table= document.createElement("table");
+table.setAttribute("class","table table-hover");
+let thead=document.createElement('thead');
+thead.setAttribute("class","thead-dark rounded-top");
+thead.innerHTML=`<tr>
+
+<th scope="col">Username</th>
+<th scope="col">Points</th>
+</tr>`;
+table.appendChild(thead);
+let tbody=document.createElement("tbody")
+
+players.forEach(p=>{
+let tr=document.createElement('tr');
+tr.setAttribute("class","table-success");
+tr.innerHTML=`<td>${p.userName}</td><td>${p.points}</td>`;
+tbody.appendChild(tr);
+
+});
+table.appendChild(tbody);
+div.appendChild(table);
+endpopUpBox.appendChild(div);
+var popBtn=document.createElement('a');
+    popBtn.setAttribute('id','popBtn');
+    popBtn.href="/"
+    popBtn.innerText='EXIT';
+    endpopUpBox.appendChild(popBtn);
+    main_game.appendChild(endpopUpBox)
 
 
-})
+}
+function addEndPopUp(players)
+{
+    const endpopUpBox = document.createElement("div");
+    endpopUpBox.className = "popUpBox-end";
+    var heading=document.createElement('h1');
+        heading.setAttribute("class","py-2 center btn-warning flex text-center");
+        heading.innerText="RESULTS";
+    endpopUpBox.appendChild(heading);
 
+    addTable(players,endpopUpBox);
+
+
+}
+
+
+// When all the round of the game are over
+socket.on('results',players=>{
+    console.log(players);
+    addEndPopUp(players);
+    
+}); 
 //When someone else draws
 function otherDraws(data) {
     draw(data.a, data.b, data.c, data.d, data.color, false, data.width, data.cap);
