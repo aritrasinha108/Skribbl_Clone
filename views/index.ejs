@@ -1,41 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style.css" />
     <title>Join The Game</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <nav>
-        <div id="icon">
-            <img src="assets/icon.png" alt="">
-            <h6>WORDPLAY</h6>
-        </div>
-        <div class="navbar">
-            <a href="#">Home</a>
-            <a href="#">About Us</a>
-            <a href="#">Ping</a>
-        </div>
+      <div id="icon">
+        <img src="assets/icon.png" alt="" />
+        <h6>WORDPLAY</h6>
+      </div>
+      <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#">About Us</a>
+        <a href="#">Ping</a>
+      </div>
     </nav>
 
-    <section id="main_landing" style="justify-content: center; align-items: center;">
-        <form action="/" id="entry" method="POST" autocomplete="off">
-            <input type="text" placeholder="Enter your name " class="info" name="myName" id="myName" autocomplete="off"
-                required>
-            <input type="text" placeholder="Enter the room id " class="info" name="roomId" id="myId" autocomplete="off"
-                required>
-            <button class="btn"  type="submit">Join</button>
-            
-        </form>
-        
-
+    <section
+      id="main_landing"
+      style="justify-content: center; align-items: center"
+    >
+      <form action="/" id="entry" method="POST" autocomplete="off">
+        <input
+          type="text"
+          placeholder="Enter your name "
+          class="info"
+          name="myName"
+          id="myName"
+          autocomplete="off"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter the room id "
+          class="info"
+          name="roomId"
+          id="myId"
+          autocomplete="off"
+          required
+        />
+        <button class="btn" type="submit">Join</button>
+      </form>
     </section>
     <script src="/socket.io/socket.io.js"></script>
-  
-
-</body>
-
+  </body>
 </html>
